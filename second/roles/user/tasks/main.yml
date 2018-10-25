@@ -1,0 +1,27 @@
+---
+# tasks file for user
+
+#tasks:
+  - name: Create group
+    group:
+      name: "{{ user_primary_group }}"
+      gid: "{{ user_primary_group_id }}"
+      state: present
+
+  - name: Create user
+    user:
+      name: "{{ user_name }}"
+      uid: "{{ user_id }}"
+      password: "{{ user_password }}"
+      group: "{{ user_primary_group_id }}"
+      state: present
+      createhome: yes
+      home: "{{ user_home_dir }}"
+  - debug: msg="new user is {{ user_name }}"
+
+  - name: Create ssh key for user
+    user:
+      name: "{{ user_name }}"
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: "{{ user_authorized_key }}"
