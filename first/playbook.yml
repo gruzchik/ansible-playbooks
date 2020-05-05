@@ -6,12 +6,12 @@
     user_primary_group_id: 1111
     user_password: $6$5dt3/2Jf/KYlEk.$nb50pFrfysK/e4wE/wt0klEEiUZ5VN30ErF.hcAuTf.IMIx712NE3fzfu4Ap3IeW78qRJBqecpMesP8rOOhNO1
     user_authorized_key: .ssh/id_rsa
-    user_home_dir: /home/a1
+    user_home_dir: /home/{{ user_name }}
 
   tasks:
   - name: Create group
     group:
-      name: "{{ user_primary_group }}"
+      name: "{{ user_primary_group | default(a2)}}"
       gid: "{{ user_primary_group_id }}"
       state: present
 
