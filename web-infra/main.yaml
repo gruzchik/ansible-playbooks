@@ -1,0 +1,23 @@
+
+---
+- name: Test Connection
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Ping my server
+    ping:
+
+  - name: Echo hostname
+    command: hostname
+    register: hostname
+
+  - set_fact: full_hostname="hostname is {{ hostname.stdout }}."
+  - debug:
+      var: full_hostname
+
+  - name: Install httpd Debian
+    apt: name=apache2 state=present
+
+#  - name: install httpd Centos
+#    yum: name=httpd state=latest
