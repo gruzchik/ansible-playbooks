@@ -5,6 +5,8 @@
   become: yes
 
   vars:
+    source_file: ./website/index.html
+    dest_file: /var/www/html
     message1: Hello
     message2: World
     secret: !vault |
@@ -37,3 +39,23 @@
   - name: install httpd Centos
     yum: name=httpd state=latest
     when: ansible_os_family == 'RedHat'
+
+  - name: Copy index file into root
+    copy: src={{ source_file }} dest={{ dest_file }} mode=055
+    notify: Restart Apache
+
+  - set_fact: webserver="apache2"
+    when: ansible_os_family == 'Debian'
+
+  - set_fact: webserver="httpd"
+    when: ansible_os_family == 'RedHat'
+
+  - debug:
+      var: webserver
+
+  - name: Start webserver service
+    service: name={{ webserver }} state=started enabled=yes
+
+  handlers:
+   - name: Restart Apache
+     service: name={{ webserver }} state=restarted
