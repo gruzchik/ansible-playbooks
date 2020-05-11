@@ -4,6 +4,17 @@
   hosts: all
   become: yes
 
+  vars:
+    message1: Hello
+    message2: World
+    secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38616431663962383265346536376138666631626536303136646239343731663231386163653139
+          3864373031333361653431363763653636613035363665340a626531323261356264313031393130
+          36376533666565303532643937303765653731353465656536353530323763353930656462366533
+          3663343733356638640a303865386337363166626438613062323162373935366363613035613335
+          3462
+
   tasks:
   - name: Ping my server
     ping:
@@ -13,8 +24,11 @@
     register: hostname
 
   - set_fact: full_hostname="hostname is {{ hostname.stdout }}."
+#  - set_fact: show_info="text = {{ secret }}."
   - debug:
       var: full_hostname
+#  - debug:
+#      var: show_info
 
   - name: Install httpd Debian
     apt: name=apache2 state=present
