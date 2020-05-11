@@ -1,6 +1,6 @@
 
 ---
-- name: Test Connection
+- name: Install Apache
   hosts: all
   become: yes
 
@@ -32,6 +32,8 @@
 
   - name: Install httpd Debian
     apt: name=apache2 state=present
+    when: ansible_os_family == 'Debian'
 
-#  - name: install httpd Centos
-#    yum: name=httpd state=latest
+  - name: install httpd Centos
+    yum: name=httpd state=latest
+    when: ansible_os_family == 'RedHat'
