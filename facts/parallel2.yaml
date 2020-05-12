@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: sleep 10s
+      command: "sleep 10"
+      loop: "{{range(3)|list}}"
+      async: 11
+      poll: 0
+      register: async_loop
+
+    - debug:
+        var: async_loop.results
+
+    - name: wait
+      async_status:
+        jid: "{{item.ansible_job_id}}"
+        mode: status
+      retries: 11
+      delay: 1
+      loop: "{{async_loop.results}}"
+      register: async_loop_jobs
+      until: async_loop_jobs.finished
+
+    - debug: var=async_loop_jobs

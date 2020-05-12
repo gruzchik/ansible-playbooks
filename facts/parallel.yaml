@@ -1,0 +1,21 @@
+---
+- hosts: all
+  serial: 10
+  strategy: free
+  gather_facts: False
+
+  tasks:
+  - debug:
+      var: ansible_os_family
+  - name: first task
+    command: hostname
+    register: myhostname
+  - debug: msg="{{ myhostname.stdout}}."
+  - name: second task
+    command: pwd
+    register: mypath
+  - debug: msg="{{ mypath.stdout }}."
+  - name: third task
+    command: uptime
+    register: myuptime
+  - debug: msg="{{ myuptime.stdout }}."
